@@ -1,1 +1,116 @@
 
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super TikTok Downloader</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        input {
+            width: 90%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        button {
+            background: #fe2c55; /* TikTok Color */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background: #e0234a; }
+        
+        #loader { display: none; margin-top: 15px; color: #666; }
+        
+        #result { margin-top: 20px; display: none; border-top: 1px solid #eee; padding-top: 20px;}
+        img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+        .d-btn {
+            display: inline-block;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>TikTok Video Saver</h2>
+    <input type="text" id="url" placeholder="Paste link here...">
+    <button onclick="downloadVideo()">Process Video</button>
+    
+    <div id="loader">
+        সার্ভারে ডাউনলোড হচ্ছে... একটু সময় লাগতে পারে (৫-১০ সেকেন্ড)
+    </div>
+
+    <div id="result">
+        <h4 id="title">Title</h4>
+        <img id="thumb" src="" alt="">
+        <a id="link" href="#" class="d-btn">Save to Mobile/PC</a>
+    </div>
+</div>
+
+<script>
+    async function downloadVideo() {
+        const url = document.getElementById('url').value;
+        const loader = document.getElementById('loader');
+        const result = document.getElementById('result');
+
+        if(!url) return alert("লিংক দে ভাই!");
+
+        loader.style.display = 'block';
+        result.style.display = 'none';
+
+        try {
+            const res = await fetch('/api/convert', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({url: url})
+            });
+            
+            const data = await res.json();
+
+            if(data.success) {
+                document.getElementById('title').innerText = data.title;
+                document.getElementById('thumb').src = data.thumbnail;
+                document.getElementById('link').href = data.download_url;
+                result.style.display = 'block';
+            } else {
+                alert(data.message);
+            }
+        } catch (e) {
+            alert("সমস্যা হয়েছে: " + e);
+        } finally {
+            loader.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
