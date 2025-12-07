@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,7 +65,7 @@
     <button onclick="downloadVideo()">Process Video</button>
     
     <div id="loader">
-        সার্ভারে ডাউনলোড হচ্ছে... একটু সময় লাগতে পারে (৫-১০ সেকেন্ড)
+        Processing on server... please wait (5-10 seconds)
     </div>
 
     <div id="result">
@@ -82,7 +81,7 @@
         const loader = document.getElementById('loader');
         const result = document.getElementById('result');
 
-        if(!url) return alert("লিংক দে ভাই!");
+        if(!url) return alert("Please provide a link!");
 
         loader.style.display = 'block';
         result.style.display = 'none';
@@ -105,7 +104,7 @@
                 alert(data.message);
             }
         } catch (e) {
-            alert("সমস্যা হয়েছে: " + e);
+            alert("Something went wrong: " + e);
         } finally {
             loader.style.display = 'none';
         }
